@@ -1,14 +1,15 @@
 from langchain.tools import tool
 import yfinance as yf
 import pandas as pd
-from typing import Annotated
+from typing import Annotated, Literal, Optional
 
 @tool
-def evaluate_fundamentals(ticker: Annotated[str, "stock ticker of interest"]) -> pd.DataFrame:
+def evaluate_fundamentals(
+    ticker: Annotated[str, "stock ticker of interest"],
+    period: Optional[Literal["1mo","3mo","6mo","1y","5y","10y", "ytd","max"]] = "ytd"
+) -> pd.DataFrame:
     """
     Performs **fundamental analysis** to identify potentially **undervalued stocks**.
-    
-    All fundamental analysis is based on 5 years of historical financial data.
 
     Calculates and assesses key financial metrics including:
     1.  **Profitability Ratios**: Gross Margin (Gross Profit/Total Income), Net Margin (Net Profit/Total Income), Return on Assets (Net Income/Total Assets), Return on Equity (Net Income/Shareholder Equity).
@@ -16,12 +17,18 @@ def evaluate_fundamentals(ticker: Annotated[str, "stock ticker of interest"]) ->
     3.  **Solvency Ratios**: Debt to Assets (Total Liabilities/Total Assets), Debt to Equity (Total Liabilities/Shareholder Equity).
     4.  **Valuation Ratios**: P/E Ratio (Share Price/Earnings per Share), P/B Ratio (Share Price/Book Value), P/S Ratio (Share Price/(Stockholders Equity/Volume)).
     """
-    analyst = FundamentalAnalyst(ticker)
+    analyst = FundamentalAnalyst(ticker=ticker, period=period)
     df = analyst.analyse()
     return df
 
 class FundamentalAnalyst:
-    def __init__(self, ticker: str):
+    def __init__(
+        self, 
+        ticker: str,
+        period: Optional[
+            Literal["1mo","3mo","6mo","1y","5y","10y", "ytd","max"]
+        ] = "ytd"
+    ):
         """Initialize the fundamental analyst tool"""
         self.ticker = ticker
         
@@ -32,7 +39,7 @@ class FundamentalAnalyst:
         self.actions = yf.Ticker(self.ticker).actions
         
         ## Filter data from yahoo finance
-        self.data = yf.Ticker(self.ticker).history(period="5y").tz_localize(None)
+        self.data = yf.Ticker(self.ticker).history(period=period).tz_localize(None)
         self.dates = [date.date() for date in self.balance_sheet.index]
         self.data = self.data[self.data.index.isin(self.dates)]
         
