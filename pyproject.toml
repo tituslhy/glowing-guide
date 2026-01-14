@@ -11,6 +11,7 @@ dependencies = [
     "langchain-ollama>=1.0.0",
     "langchain-openai>=1.0.1",
     "langgraph>=1.0.1",
+    "langgraph-cli[inmem]>=0.4.4",
     "langsmith>=0.4.38",
     "python-dotenv>=1.1.1",
     "ta>=0.11.0",
