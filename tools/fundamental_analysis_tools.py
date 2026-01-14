@@ -63,9 +63,9 @@ class FundamentalAnalyst:
         """Returns current ratio """    
         self._df['Current Ratio'] = self.balance_sheet['Current Assets'] / self.balance_sheet['Current Liabilities']
     
-    def get_quick_ratio(self):
-        """Returns quick ratio"""
-        self._df['Quick Ratio'] = (self.balance_sheet['Current Assets'] - self.balance_sheet['Inventory'])/self.balance_sheet['Current Liabilities']
+    # def get_quick_ratio(self):
+    #     """Returns quick ratio"""
+    #     self._df['Quick Ratio'] = (self.balance_sheet['Current Assets'] - self.balance_sheet['Inventory'])/self.balance_sheet['Current Liabilities']
     
     def get_debt_to_equity(self):
         """Returns debt-to-equity ratio"""
@@ -96,7 +96,7 @@ class FundamentalAnalyst:
         self.get_current_ratio()
         self.get_roa()
         self.get_roe()
-        self.get_quick_ratio()
+        # self.get_quick_ratio()
         self.get_debt_to_assets()
         self.get_debt_to_equity()
         self.get_pe_ratio()
